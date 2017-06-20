@@ -17,6 +17,7 @@ namespace DocumentDBDemo {
 		private const string EndpointUrl = "https://azuredocdbdemo.documents.azure.com:443/";
 		private const string AuthorizationKey =
 		   "BBhjI0gxdVPdDbS4diTjdloJq7Fp4L5RO/StTt6UtEufDM78qM2CtBZWbyVwFPSJIm8AcfDu2O+AfV T+TYUnBQ==";
+        private static Database database;
 
 		static void Main(string[] args) {
 			try {
@@ -32,10 +33,15 @@ namespace DocumentDBDemo {
 		private static async Task CreateDocumentClient() {
 			// Create a new instance of the DocumentClient
 			using (var client = new DocumentClient(new Uri(EndpointUrl), AuthorizationKey)) {
-				// await CreateDatabase(client);
-                GetDatabases(client);
-				await DeleteDatabase(client);
-				GetDatabases(client);
+				database = client.CreateDatabaseQuery("SELECT * FROM c WHERE c.id = 'myfirstdb'").AsEnumerable().First();
+	
+				await CreateCollection(client, "MyCollection1");
+				await CreateCollection(client, "MyCollection2", "S2");
+
+				//await CreateDatabase(client);
+				//GetDatabases(client);
+				//await DeleteDatabase(client);
+				//GetDatabases(client);
 			}
 		}
 
@@ -111,6 +117,39 @@ namespace DocumentDBDemo {
 			await client.DeleteDatabaseAsync(database.SelfLink);
 		}
 
+		/******************************************
+         * 
+         * 
+         * Creating a collection
+         *
+         *
+         ******************************************/
 
+		private async static Task CreateCollection(DocumentClient client, string collectionId,
+   string offerType = "S1") {
+
+			Console.WriteLine();
+			Console.WriteLine("**** Create Collection {0} in {1} ****", collectionId, database.Id);
+
+			var collectionDefinition = new DocumentCollection { Id = collectionId };
+			var options = new RequestOptions { OfferType = offerType };
+			var result = await client.CreateDocumentCollectionAsync(database.SelfLink,
+			   collectionDefinition, options);
+			var collection = result.Resource;
+
+			Console.WriteLine("Created new collection");
+			ViewCollection(collection);
+		}
+
+		private static void ViewCollection(DocumentCollection collection) {
+			Console.WriteLine("Collection ID: {0} ", collection.Id);
+			Console.WriteLine("Resource ID: {0} ", collection.ResourceId);
+			Console.WriteLine("Self Link: {0} ", collection.SelfLink);
+			Console.WriteLine("Documents Link: {0} ", collection.DocumentsLink);
+			Console.WriteLine("UDFs Link: {0} ", collection.UserDefinedFunctionsLink);
+			Console.WriteLine(" StoredProcs Link: {0} ", collection.StoredProceduresLink);
+			Console.WriteLine("Triggers Link: {0} ", collection.TriggersLink);
+			Console.WriteLine("Timestamp: {0} ", collection.Timestamp);
+		}
 	}
 }

@@ -1,0 +1,13 @@
+﻿<Properties StartupConfiguration="{89E3520D-3EC5-431A-A224-AC319F7C7385}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DocumentDBDemo/Program.cs">
+    <Files>
+      <File FileName="DocumentDBDemo/Program.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>
